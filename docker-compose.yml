@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  db:
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: Y2sA8WdhiVPE7GxrDJC0W5rYxcfQRVwX
+      POSTGRES_DB: marketplace_db
+      POSTGRES_USER: admin
+    ports:
+      - '5432:5432'
