@@ -51,6 +51,7 @@ export class AuthService {
         email: user.email,
       },
       ...tokens,
+      jwtExpiresIn: new Date().setTime(new Date().getTime() + 20 * 1000),
     };
   }
 
