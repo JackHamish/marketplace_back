@@ -6,7 +6,6 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -29,31 +28,18 @@ export class UserService {
       },
     });
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   }
 
-  async findUnique(idOrEmail: string) {
-    console.log(idOrEmail);
-
-    const user = await this.prisma.user.findUnique({
-      where: /^\S+@\S+\.\S+$/.test(idOrEmail)
-        ? { email: idOrEmail }
-        : { id: idOrEmail },
-    });
+  async findUnique(where: { email: string } | { id: string }) {
+    const user = await this.prisma.user.findUnique({ where });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    };
+    return user;
   }
 }

@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { UserService } from 'src/user/user.service';
 import { RefreshDto } from './dto/refresh.dto';
+import { addSeconds, getTime } from 'date-fns';
 import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { verify } from 'argon2';
 import { LoginDto } from './dto/login.dto';
+import { JWT_EXPIRES_IN_SECONDS } from './auth.constants';
 @Injectable()
 export class AuthService {
   constructor(
@@ -27,17 +29,19 @@ export class AuthService {
   }
 
   async refresh(refreshDto: RefreshDto) {
-    const result = await this.jwtService.verifyAsync(refreshDto.refreshToken);
+    const result = await this.jwtService.verifyAsync(refreshDto.refreshToken, {
+      secret: process.env.JWT_REFRESH_SECRET,
+    });
 
     if (!result) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const user = await this.userService.findUnique(result.id);
+    const user = await this.userService.findUnique({ id: result.id });
 
     const tokens = await this.issueTokens(user.id);
 
-    return { ...tokens };
+    return tokens;
   }
 
   async login(loginDto: LoginDto) {
@@ -51,16 +55,19 @@ export class AuthService {
         email: user.email,
       },
       ...tokens,
-      jwtExpiresIn: new Date().setTime(new Date().getTime() + 20 * 1000),
+      jwtExpiresIn: getTime(addSeconds(new Date(), JWT_EXPIRES_IN_SECONDS)),
     };
   }
 
   private async issueTokens(userId: string) {
     const data = { id: userId };
 
-    const accessToken = await this.jwtService.signAsync(data);
+    const accessToken = await this.jwtService.signAsync(data, {
+      secret: process.env.JWT_ACCESS_SECRET,
+    });
 
     const refreshToken = await this.jwtService.signAsync(data, {
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '7d',
     });
 
@@ -68,7 +75,7 @@ export class AuthService {
   }
 
   private async validateUser(loginDto: LoginDto) {
-    const user = await this.userService.findUnique(loginDto.email);
+    const user = await this.userService.findUnique({ email: loginDto.email });
 
     if (!user) {
       throw new NotFoundException('User not found');

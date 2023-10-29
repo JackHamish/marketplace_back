@@ -8,15 +8,15 @@ import {
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { User } from '@prisma/client';
-import { CurrentUser } from './decorators/current.user.decorator';
+import { CurrentUser } from 'src/auth/decorators/current.user.decorator';
 
+@UseGuards(AuthGuard)
 @Controller('')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard)
   @Get('me')
   findOne(@CurrentUser() loggedUser: User) {
-    return this.userService.findUnique(loggedUser.id);
+    return this.userService.findUnique({ id: loggedUser.id });
   }
 }
