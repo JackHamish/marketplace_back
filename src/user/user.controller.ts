@@ -18,10 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('me')
-  findOne(@CurrentUser() loggedUser: User) {
-    return this.userService.findUnique({ id: loggedUser.id });
-  }
+ 
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
