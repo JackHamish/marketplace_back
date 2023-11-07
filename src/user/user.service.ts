@@ -6,6 +6,8 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -33,13 +35,24 @@ export class UserService {
     return userWithoutPassword;
   }
 
-  async findUnique(where: { email: string } | { id: string }) {
-    const user = await this.prisma.user.findUnique({ where });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+  async findUnique(where: Prisma.UserWhereInput) {
+    const user = await this.prisma.user.findFirstOrThrow({
+      where,
+    });
 
     return user;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    await this.findUnique({ id });
+
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
+
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   }
 }
