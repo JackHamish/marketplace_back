@@ -12,13 +12,11 @@ import { verify } from 'argon2';
 import { LoginDto } from './dto/login.dto';
 import { JWT_EXPIRES_IN_SECONDS } from './auth.constants';
 import { CreateSteamUserDto } from 'src/steam-user/dto/create-steam-user.dto';
-import { SteamUserService } from 'src/steam-user/steam-user.service';
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private steamUserService: SteamUserService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -62,11 +60,9 @@ export class AuthService {
   }
 
   async loginSteam(loginDto: CreateSteamUserDto) {
-    let user = await this.steamUserService.findOneBySteamId(loginDto.steamid);
-
-    if (!user) {
-      user = await this.steamUserService.create(loginDto);
-    }
+    const user = await this.userService.findUnique({
+      steamUser: { steamid: loginDto.steamid },
+    });
 
     const tokens = await this.issueTokens(user.id);
 
@@ -78,15 +74,9 @@ export class AuthService {
   }
 
   async findOne(id: string) {
-    const steamUser = await this.steamUserService.findOne(id);
+    const user = await this.userService.findUnique({ id });
 
-    if (!steamUser) {
-      const user = await this.userService.findUnique({ id });
-
-      return user;
-    }
-
-    return steamUser;
+    return user;
   }
 
   private async issueTokens(userId: string) {

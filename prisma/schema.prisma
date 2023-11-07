@@ -14,25 +14,16 @@ model User {
   email     String   @unique
   name      String
   password  String
+
+  steamUser SteamUser?
 }
 
 model SteamUser {
-  id                       String   @id @default(uuid()) @db.Uuid
-  createdAt                DateTime @default(now()) @map("created_at")
-  updatedAt                DateTime @updatedAt @map("updated_at")
-  steamid                  String   @unique
-  communityvisibilitystate Int
-  profilestate             Int
-  personaname              String
-  profileurl               String
-  avatar                   String
-  avatarmedium             String
-  avatarfull               String
-  avatarhash               String
-  lastlogoff               Int
-  personastate             Int
-  realname                 String
-  primaryclanid            String
-  timecreated              Int
-  personastateflags        Int
+  steamid     String @unique
+  personaname String
+  profileurl  String
+  avatar      String
+
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 }
