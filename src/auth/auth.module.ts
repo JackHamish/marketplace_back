@@ -5,6 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SteamUserService } from 'src/steam-user/steam-user.service';
+import { MailModule } from 'src/mail /mail.module';
+import { ResetTokenModule } from 'src/reset-token/reset-token.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { SteamUserService } from 'src/steam-user/steam-user.service';
       secret: process.env.JWT_ACCESS_SECRET,
       signOptions: { expiresIn: '5m' },
     }),
+    MailModule,
+    ResetTokenModule
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, PrismaService, SteamUserService],

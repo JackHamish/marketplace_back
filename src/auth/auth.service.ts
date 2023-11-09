@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { RefreshDto } from './dto/refresh.dto';
 import { addSeconds, getTime } from 'date-fns';
 import {
+  BadRequestException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
@@ -12,11 +13,15 @@ import { verify } from 'argon2';
 import { LoginDto } from './dto/login.dto';
 import { JWT_EXPIRES_IN_SECONDS } from './auth.constants';
 import { CreateSteamUserDto } from 'src/steam-user/dto/create-steam-user.dto';
+import { ResetTokenService } from 'src/reset-token/reset-token.service';
+import { MailService } from 'src/mail /mail.service';
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
+    private resetTokenService: ResetTokenService,
+    private mailService: MailService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -78,6 +83,8 @@ export class AuthService {
 
     return user;
   }
+
+  
 
   private async issueTokens(userId: string) {
     const data = { id: userId };
