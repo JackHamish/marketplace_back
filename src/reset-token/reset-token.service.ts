@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ResetTokenInterface } from './interfaces/reset-token.interface';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,6 +17,14 @@ export class ResetTokenService {
       email,
       token,
     };
+
+    const duplicate = await this.prisma.resetToken.findUnique({
+      where: { email },
+    });
+
+    if (duplicate) {
+      throw new BadRequestException('Reset token already send to email');
+    }
 
     return await this.prisma.resetToken.create({ data: resetPasswordObject });
   }

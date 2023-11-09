@@ -36,3 +36,12 @@ model ResetToken {
   email String @unique
   token String
 }
+
+model Nft {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  email String @unique
+  token String
+}
