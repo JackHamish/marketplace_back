@@ -1,58 +1,42 @@
-import { DownloadResponse, Storage } from '@google-cloud/storage';
+import {
+  FirebaseStorage,
+  getStorage,
+  ref,
+  uploadBytes,
+  deleteObject,
+  getDownloadURL,
+} from 'firebase/storage';
 import { Injectable } from '@nestjs/common';
-import { StorageFile } from 'src/configs/google-storage/google-storage';
-import StorageConfig from 'src/configs/google-storage/google-storage.config';
-
 @Injectable()
 export class StorageService {
-  private storage: Storage;
-  private bucket: string;
+  private storage: FirebaseStorage;
 
   constructor() {
-    this.storage = new Storage({
-      projectId: StorageConfig.projectId,
-      credentials: {
-        client_email: StorageConfig.client_email,
-        private_key: StorageConfig.private_key,
-      },
-    });
-
-    this.bucket = StorageConfig.mediaBucket;
+    this.storage = getStorage();
   }
 
-  async save(
-    path: string,
-    contentType: string,
-    media: Buffer,
-    metadata: { [key: string]: string }[],
-  ) {
-    const object = metadata.reduce((obj, item) => Object.assign(obj, item), {});
-    const file = this.storage.bucket(this.bucket).file(path);
-    const stream = file.createWriteStream();
-    stream.on('finish', async () => {
-      return await file.setMetadata({
-        metadata: object,
-      });
-    });
-    stream.end(media);
+  async save(file: Express.Multer.File, path: string) {
+    const fileExtension = file.originalname.split('.').pop();
+
+    const timestamp = Date.now();
+    const name = file.originalname.split('.')[0];
+    const type = file.originalname.split('.')[1];
+    const fileName = `${name}_${timestamp}.${type}`;
+
+    const fileRef = ref(this.storage, `${path}/${fileName}.${fileExtension}`);
+
+   
+
+    const uploaded = await uploadBytes(fileRef, file.buffer);
+
+    return {
+      url: await getDownloadURL(uploaded.metadata.ref),
+      ref: uploaded.metadata.fullPath,
+    };
   }
 
   async delete(path: string) {
-    await this.storage
-      .bucket(this.bucket)
-      .file(path)
-      .delete({ ignoreNotFound: true });
-  }
-
-  async get(path: string): Promise<StorageFile> {
-    const fileResponse: DownloadResponse = await this.storage
-      .bucket(this.bucket)
-      .file(path)
-      .download();
-    const [buffer] = fileResponse;
-    const storageFile = new StorageFile();
-    storageFile.buffer = buffer;
-    storageFile.metadata = new Map<string, string>();
-    return storageFile;
+    const fileRef = ref(this.storage, path);
+    return await deleteObject(fileRef);
   }
 }

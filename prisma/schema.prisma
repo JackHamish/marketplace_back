@@ -45,7 +45,8 @@ model Nft {
 
   title String
   url   String
+  ref   String
 
-  userId String @unique @db.Uuid
+  userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id])
 }

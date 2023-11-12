@@ -1,23 +1,34 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
-  Res,
-  ServiceUnavailableException,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
-import { StorageFile } from 'src/configs/google-storage/google-storage';
+import { User } from '@prisma/client';
+import { log } from 'console';
+import { CurrentUser } from 'src/auth/decorators/current.user.decorator';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { StorageService } from 'src/storage/storage.service';
+import { NftService } from './nft.service';
 
+@UseGuards(AuthGuard)
 @Controller('nft')
 export class NftController {
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private nftService: NftService,
+  ) {}
+
+  @Get()
+  async getAll() {
+    return await this.nftService.getAll();
+  }
 
   @Post()
   @UseInterceptors(
@@ -28,32 +39,21 @@ export class NftController {
       },
     }),
   )
-  async uploadMedia(
+  async upload(
+    @Body() uploadDto: { title: string },
     @UploadedFile() file: Express.Multer.File,
-    @Body('mediaId') mediaId: string,
+    @CurrentUser() user: User,
   ) {
-    await this.storageService.save(
-      'media/' + mediaId,
-      file.mimetype,
-      file.buffer,
-      [{ mediaId: mediaId }],
-    );
+    return await this.nftService.upload({
+      file,
+      title: uploadDto.title,
+      path: 'nfts',
+      user,
+    });
   }
 
-  @Get('/:mediaId')
-  async downloadMedia(@Param('mediaId') mediaId: string, @Res() res: Response) {
-    let storageFile: StorageFile;
-    try {
-      storageFile = await this.storageService.get('media/' + mediaId);
-    } catch (e) {
-      if (e.message.toString().includes('No such object')) {
-        throw new NotFoundException('image not found');
-      } else {
-        throw new ServiceUnavailableException('internal error');
-      }
-    }
-    res.setHeader('Content-Type', storageFile.contentType);
-    res.setHeader('Cache-Control', 'max-age=60d');
-    res.end(storageFile.buffer);
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return await this.nftService.delete(id);
   }
 }
