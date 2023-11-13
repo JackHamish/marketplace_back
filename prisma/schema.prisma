@@ -29,10 +29,9 @@ model SteamUser {
   user   User   @relation(fields: [userId], references: [id])
 }
 
-model ResetToken {
+model ResetPasswordToken {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   email String @unique
   token String

@@ -4,14 +4,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'argon2';
 import {
   BadRequestException,
-  NotFoundException,
 } from '@nestjs/common/exceptions';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, ResetPasswordToken } from '@prisma/client';
 import { MailService } from 'src/mail /mail.service';
 import { ResetTokenService } from 'src/reset-token/reset-token.service';
 import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
-import { ResetTokenInterface } from 'src/reset-token/interfaces/reset-token.interface';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -41,7 +39,7 @@ export class UserService {
     resetPasswordWithTokenRequestDto: ResetPasswordWithTokenRequestDto,
   ): Promise<void> {
     const { token, newPassword } = resetPasswordWithTokenRequestDto;
-    const { email } = this.jwtService.decode(token) as ResetTokenInterface;
+    const { email } = this.jwtService.decode(token) as ResetPasswordToken;
 
     const resetPasswordRequest = await this.resetTokenService.getResetToken(
       token,

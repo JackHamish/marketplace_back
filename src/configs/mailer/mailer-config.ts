@@ -1,9 +1,8 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getMailConfig } from './smtp-config';
 
-export const mailerAsyncConfig = {
+export const mailerConfig = {
   imports: [ConfigModule],
-  inject: [ConfigService],
   useFactory: async () => {
     return await getMailConfig();
   },

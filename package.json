@@ -34,7 +34,6 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "date-fns": "^2.30.0",
-    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "firebase": "^10.6.0",
     "reflect-metadata": "^0.1.13",

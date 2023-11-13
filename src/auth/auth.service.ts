@@ -20,8 +20,6 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private resetTokenService: ResetTokenService,
-    private mailService: MailService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -83,8 +81,6 @@ export class AuthService {
 
     return user;
   }
-
-  
 
   private async issueTokens(userId: string) {
     const data = { id: userId };

@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { ResetTokenInterface } from './interfaces/reset-token.interface';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ResetPasswordToken } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -10,15 +10,18 @@ export class ResetTokenService {
     private jwtService: JwtService,
   ) {}
 
-  public async generateResetToken(email: string): Promise<ResetTokenInterface> {
-    const token = await this.jwtService.signAsync({ email });
+  public async generateResetToken(email: string): Promise<ResetPasswordToken> {
+    const token = await this.jwtService.signAsync(
+      { email },
+      { secret: process.env.JWT_RESET_PASSWORD_SECRET },
+    );
 
     const resetPasswordObject = {
       email,
       token,
     };
 
-    const duplicate = await this.prisma.resetToken.findUnique({
+    const duplicate = await this.prisma.resetPasswordToken.findUnique({
       where: { email },
     });
 
@@ -26,18 +29,22 @@ export class ResetTokenService {
       throw new BadRequestException('Reset token already send to email');
     }
 
-    return await this.prisma.resetToken.create({ data: resetPasswordObject });
+    return await this.prisma.resetPasswordToken.create({
+      data: resetPasswordObject,
+    });
   }
 
-  public async getResetToken(token: string): Promise<ResetTokenInterface> {
-    return await this.prisma.resetToken.findFirstOrThrow({ where: { token } });
+  public async getResetToken(token: string): Promise<ResetPasswordToken> {
+    return await this.prisma.resetPasswordToken.findFirstOrThrow({
+      where: { token },
+    });
   }
 
   public async removeResetToken(token: string): Promise<void> {
-    const { id } = await this.prisma.resetToken.findFirstOrThrow({
+    const { id } = await this.prisma.resetPasswordToken.findFirstOrThrow({
       where: { token },
     });
 
-    await this.prisma.resetToken.delete({ where: { id } });
+    await this.prisma.resetPasswordToken.delete({ where: { id } });
   }
 }

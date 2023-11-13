@@ -16,16 +16,12 @@ export class StorageService {
   }
 
   async save(file: Express.Multer.File, path: string) {
-    const fileExtension = file.originalname.split('.').pop();
-
     const timestamp = Date.now();
     const name = file.originalname.split('.')[0];
     const type = file.originalname.split('.')[1];
     const fileName = `${name}_${timestamp}.${type}`;
 
-    const fileRef = ref(this.storage, `${path}/${fileName}.${fileExtension}`);
-
-   
+    const fileRef = ref(this.storage, `${path}/${fileName}`);
 
     const uploaded = await uploadBytes(fileRef, file.buffer);
 
