@@ -26,7 +26,7 @@ export class StorageService {
     const uploaded = await uploadBytes(fileRef, file.buffer);
 
     return {
-      url: await getDownloadURL(uploaded.metadata.ref),
+      url: await getDownloadURL(uploaded.metadata.ref!),
       dbRef: uploaded.metadata.fullPath,
     };
   }
