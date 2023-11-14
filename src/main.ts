@@ -2,6 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './application/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { json as expressJson, urlencoded as expressUrlEncoded } from 'express';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from './configs/firebase/firebase.config';
+
+initializeApp(firebaseConfig);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

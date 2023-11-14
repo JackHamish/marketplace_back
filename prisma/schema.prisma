@@ -16,6 +16,7 @@ model User {
   password  String
 
   steamUser SteamUser?
+  nft       Nft[]
 }
 
 model SteamUser {
@@ -25,5 +26,26 @@ model SteamUser {
   avatar      String
 
   userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model ResetPasswordToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  email String @unique
+  token String
+}
+
+model Nft {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title String
+  url   String
+  dbRef String
+
+  userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id])
 }

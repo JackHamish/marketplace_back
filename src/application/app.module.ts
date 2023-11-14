@@ -3,6 +3,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserModule } from 'src/user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { NftModule } from 'src/nft/nft.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     UserModule,
+    NftModule
   ],
   controllers: [],
   providers: [],
