@@ -27,7 +27,7 @@ export class StorageService {
 
     return {
       url: await getDownloadURL(uploaded.metadata.ref),
-      ref: uploaded.metadata.fullPath,
+      dbRef: uploaded.metadata.fullPath,
     };
   }
 

@@ -25,6 +25,11 @@ export class NftController {
     private nftService: NftService,
   ) {}
 
+  @Get('/user')
+  async getByUserId(@CurrentUser() user: User) {
+    return await this.nftService.getByUserId(user.id);
+  }
+
   @Get()
   async getAll() {
     return await this.nftService.getAll();
