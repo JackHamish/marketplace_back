@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'argon2';
 import {
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common/exceptions';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma, ResetPasswordToken } from '@prisma/client';
@@ -11,6 +12,8 @@ import { MailService } from 'src/mail /mail.service';
 import { ResetTokenService } from 'src/reset-token/reset-token.service';
 import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
 import { JwtService } from '@nestjs/jwt';
+import { NotificationsService } from 'src/notifications/notifications.service';
+import { NotificationDto } from 'src/notifications/dto/notification.dto';
 
 @Injectable()
 export class UserService {
@@ -19,7 +22,24 @@ export class UserService {
     private resetTokenService: ResetTokenService,
     private mailService: MailService,
     private jwtService: JwtService,
+    private readonly notificationsService: NotificationsService,
   ) {}
+
+  async enableNotifications(
+    id: string,
+    createNotificationDto: NotificationDto,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return await this.notificationsService.acceptPushNotification(
+      user,
+      createNotificationDto,
+    );
+  }
 
   public async resetPasswordRequest(email: string) {
     const user = await this.findUnique({ email });
@@ -31,6 +51,12 @@ export class UserService {
     const response = await this.resetTokenService.generateResetToken(email);
 
     await this.mailService.sendResetPasswordLink(email, response.token);
+
+    await this.notificationsService.sendPush(
+      user,
+      'Password change',
+      'There is a new application for changing the password',
+    );
 
     return response;
   }

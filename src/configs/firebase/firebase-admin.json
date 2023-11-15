@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "nft-marketplace-7a526",
+  "private_key_id": "0a4b4f91a7aa511fc5142da81039b5554715f62a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQDiOeK7lxQoKF7h\nlzE43Rc3DXz8+N+/rykVnxfsiCAemFF5OklfOkpcaBu1965POUBr2yfrAuLMkBaz\n2lGNXFb91lEkoznxGj/xyKX1qhYpS3pbV/UgmB69vdqIV0yXKaRAxnWXoR6m6zif\nqKug0VZMQo0Tp9jqhDkFyx5WFJSL+CCS2F4+o8SgIHooZ9t303xlV/Ox2C7TAhEz\nYNwDrUNvRLmXlI2VjmIIdVHwVrAuUP8Jw24Wt6R2Q+sdlTKjmyp0ltYLxD7zw9i8\n/TQvFCJO2Bos7pIVvVr21EwWPFhsbTbREFt1WdcXo5I2NYT2Hwu9MKJN1Xz3c8Ju\nkztdkHB7AgMBAAECggEAZpd6r7i5XubD9IkkvNVi2EgJJQ3WJm8Qcio2ZsFq04Ue\n+ZuJt6JPI63g1zpN9caQZPk7lpO196/mY8S/lBxKpQ3CuZs+RQ0y73qfbJOoPizo\n/bCbTR8/XavSBV+Vr72mK+v0WwGpzWfBw4Hx51nXyXiq0r2dHOk+lNaC2OW3YeuX\nzk4USk71YePwyswMR20AwtVvHcO8V0tMmK1lwpZtfEf2pH9mx7+zC+TsK5z/9824\nhJdqvWQOSfrZMO9x0gV2SlXrwpx22BzIQNbQcAkWzxLgJlBDdREByYsl3cKo5gqJ\ncYcCZoDq/0rfU8UdQLw2j5P0FAftrcDN7C5kLyHcBQKBgQDyyyX9LHnP8/jMz9Ca\ncvidiWOovfbS+QW5IdMGk20h1qQDXlMnDVLCqVmBw2IzGw8T42wFm8DcA45USZXX\nPAktED+BA277fevTQu19FecnDnjeGnh/L8Kvp+Tb5wMgQp9j4/TlkGYvuXhIwoMF\n+LTBAdGcOtM5QG7qOz/J3w5QhwKBgQDuiAoCNv9rlHpPWkNkN/YTLw5yx7hA/WLn\nEBgWK3B1BXGQ5r3D7Y393+hnB39Vo76SUcsQbOHuqXTB78ijFkx2bFQTTVE7lSGv\nmBIOROOwl4Fj0EVZSApzVSEIHa6FqHEDQI1AOjBlkjjbSYwUS3ReBP/+NukDEYNs\nhsnzPqNhbQKBgQCaoiAT2xvKAkzXxRPLCqalTzeV5Ucqn0ex3YUVjxfWkWnsa0ry\neF3ZdRp4twP4IKe9tv65o7V1ax5fOG6ioq4FcW/Ar3sj2dM0vk+bdzO9gE4ixyEv\ngC+yyG/OTpeDGGuDp0/2Vb1/b9TYImpohzo4IvxpUF3u/MankAzUeagYSQJ/Uf5x\nclF1e4WOhbiBcfHKpM2IKex9admwJb1iijxka9VzNFwc3zzJkntlaAUrwESJPcLg\nCsVi5Kdbe07xqR4BKrQSMpBhXBnnenTLwBvuKMXrtGPjcs1QylR5BlEtrMQ6FOQb\nqfhWqpOY98hQXqmRVsBhPwGhF2ztwGCVCwh9IQKBgGyjrJzlFUVNgH7qbkMsygAW\nDmXH1gd8Aolvj6+ZNTLUpI9il3auBgJSPweB1FX4TCRFXj04dfed6Q2H88zdDwpo\nArKwvP7sLMmE0HHOLWbHbs+XgskaoBaQTFVm1aUH1b1yQuHofy52du84xH40fl4p\ncVHXaUpnRd3SBusy1pXp\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-yh9cr@nft-marketplace-7a526.iam.gserviceaccount.com",
+  "client_id": "109441345895423005608",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-yh9cr%40nft-marketplace-7a526.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
