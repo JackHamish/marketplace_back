@@ -1,5 +1,3 @@
-import {} from 'firebase/messaging';
-
 export const firebaseConfig = {
   apiKey: 'AIzaSyDyoMZH_jCmVOcmFG8vq9TLr2rO9sEsJHc',
   authDomain: 'nft-marketplace-7a526.firebaseapp.com',

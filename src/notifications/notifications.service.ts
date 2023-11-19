@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { getMessaging } from 'firebase-admin/messaging';
 import { firebaseConfig } from 'src/configs/firebase/firebase.config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { NotificationDto } from './dto/notification.dto';
+import { CreateNotificationDto } from './dto/create-notification.dto';
 import { User } from '@prisma/client';
 import * as firebase from 'firebase-admin';
 import * as path from 'path';
@@ -20,21 +20,21 @@ export class NotificationsService {
 
   acceptPushNotification = async (
     user: User,
-    notification_dto: NotificationDto,
+    notificationDto: CreateNotificationDto,
   ) => {
-    await this.prismaService.notificationToken.updateMany({
-      where: { userId: user.id },
-      data: {
-        status: 'INACTIVE',
-      },
+    const duplicate = await this.prismaService.notificationToken.findUnique({
+      where: { notificationToken: notificationDto.notificationToken },
     });
+
+    if (duplicate)
+      throw new BadRequestException('Push notifications already accepted');
 
     const notificationToken = await this.prismaService.notificationToken.create(
       {
         data: {
           userId: user.id,
-          deviceType: notification_dto.deviceType,
-          notificationToken: notification_dto.notificationToken,
+          deviceType: notificationDto.deviceType,
+          notificationToken: notificationDto.notificationToken,
           status: 'ACTIVE',
         },
       },
@@ -50,7 +50,7 @@ export class NotificationsService {
       await this.prismaService.notificationToken.updateMany({
         where: { user: { id: user.id }, deviceType: updateDto.deviceType },
         data: {
-          status: 'INACTIVE',
+          status: 'EXPIRED',
         },
       });
     } catch (error) {
@@ -59,42 +59,43 @@ export class NotificationsService {
   };
 
   getNotifications = async () => {
-    return await this.prismaService.notifications.findMany();
+    return await this.prismaService.notification.findMany();
   };
 
   sendPush = async (user: User, title: string, body: string): Promise<void> => {
     try {
-      const notification = await this.prismaService.notificationToken.findFirst(
-        {
+      const notificationToken =
+        await this.prismaService.notificationToken.findFirst({
           where: { user: { id: user.id }, status: 'ACTIVE' },
-        },
-      );
-
-      console.log(notification);
-
-      if (notification) {
-        await this.prismaService.notifications.create({
-          data: {
-            notificationTokenId: notification.id,
-            title,
-            body,
-            status: 'ACTIVE',
-            created_by: user.name,
-          },
         });
-        const res = await firebase
-          .messaging()
-          .send({
-            notification: { title, body },
-            token: notification.notificationToken,
-            android: { priority: 'high' },
-          })
-          .catch((error: any) => {
-            console.error(error);
-          });
 
-        console.log(res);
+      console.log(notificationToken);
+
+      if (!notificationToken) {
+        return;
       }
+      const res = await firebase
+        .messaging()
+        .send({
+          notification: { title, body },
+          token: notificationToken.notificationToken,
+          android: { priority: 'high' },
+        })
+        .catch((error: any) => {
+          console.error(error);
+        });
+
+      await this.prismaService.notification.create({
+        data: {
+          notificationTokenId: notificationToken.id,
+          title,
+          body,
+          status: 'ACTIVE',
+          created_by: user.name,
+        },
+      });
+
+      console.log(res);
     } catch (error) {
       console.log(error);
 

@@ -12,7 +12,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResetPasswordRequestDto } from 'src/reset-token/dto/reset-password.request.dto';
 import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
-import { NotificationDto } from 'src/notifications/dto/notification.dto';
+import { NotificationDto } from 'src/notifications/dto/create-notification.dto';
 
 @UseGuards(AuthGuard)
 @Controller('users')

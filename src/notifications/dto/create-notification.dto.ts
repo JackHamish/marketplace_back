@@ -1,9 +1,10 @@
+import { NotificationDeviceType } from '@prisma/client';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class NotificationDto {
+export class CreateNotificationDto {
   @IsString()
   @IsNotEmpty()
-  deviceType: string;
+  deviceType: NotificationDeviceType;
 
   @IsString()
   @IsNotEmpty()
