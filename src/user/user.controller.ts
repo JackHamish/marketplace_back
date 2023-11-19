@@ -12,6 +12,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResetPasswordRequestDto } from 'src/reset-token/dto/reset-password.request.dto';
 import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
+import { NotificationDto } from 'src/notifications/dto/create-notification.dto';
 
 @UseGuards(AuthGuard)
 @Controller('users')
@@ -21,6 +22,17 @@ export class UserController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.userService.update(id, updateUserDto);
+  }
+
+  @Post(':id/enable-notifications')
+  async enablePush(
+    @Body() createNotificationDto: NotificationDto,
+    @Param('id') id: string,
+  ) {
+    return await this.userService.enableNotifications(
+      id,
+      createNotificationDto,
+    );
   }
 
   @HttpCode(200)

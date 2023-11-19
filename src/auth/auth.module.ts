@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SteamUserService } from 'src/steam-user/steam-user.service';
 import { MailModule } from 'src/mail /mail.module';
 import { ResetTokenModule } from 'src/reset-token/reset-token.module';
+import { NotificationModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ResetTokenModule } from 'src/reset-token/reset-token.module';
       signOptions: { expiresIn: '5m' },
     }),
     MailModule,
-    ResetTokenModule
+    ResetTokenModule,
+    NotificationModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, PrismaService, SteamUserService],
