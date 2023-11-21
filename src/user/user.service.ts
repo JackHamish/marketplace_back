@@ -13,7 +13,7 @@ import { ResetTokenService } from 'src/reset-token/reset-token.service';
 import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
 import { JwtService } from '@nestjs/jwt';
 import { NotificationsService } from 'src/notifications/notifications.service';
-import { NotificationDto } from 'src/notifications/dto/create-notification.dto';
+import { CreateNotificationDto } from 'src/notifications/dto/create-notification.dto';
 
 @Injectable()
 export class UserService {
@@ -27,7 +27,7 @@ export class UserService {
 
   async enableNotifications(
     id: string,
-    createNotificationDto: NotificationDto,
+    createNotificationDto: CreateNotificationDto,
   ) {
     const user = await this.prisma.user.findUnique({
       where: { id },

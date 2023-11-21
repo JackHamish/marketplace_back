@@ -10,21 +10,39 @@ export class NftService {
     private prismaService: PrismaService,
   ) {}
 
+  async getById(id: string) {
+    return await this.prismaService.nft.findUnique({
+      where: { id },
+      include: { user: { select: { name: true } } },
+    });
+  }
+
   async getAll() {
     return await this.prismaService.nft.findMany({
-      include: { user: { select: { name: true } } },
+      select: {
+        id: true,
+        title: true,
+        url: true,
+        user: { select: { name: true } },
+      },
+      // include: { user: { select: { name: true } } },
     });
   }
 
   async getByUserId(id: string) {
     return await this.prismaService.nft.findMany({
       where: { userId: id },
-      include: { user: { select: { name: true } } },
+      select: {
+        id: true,
+        title: true,
+        url: true,
+        user: { select: { name: true } },
+      },
     });
   }
 
   async upload(createNftDto: CreateNftDto) {
-    const { file, path, user, title } = createNftDto;
+    const { file, path, user, title, description } = createNftDto;
 
     const { url, dbRef } = await this.storageService.save(file, path);
 
@@ -32,6 +50,7 @@ export class NftService {
       data: {
         title,
         url,
+        description,
         dbRef,
         userId: user.id,
       },

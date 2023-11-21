@@ -16,6 +16,7 @@ import { CurrentUser } from 'src/auth/decorators/current.user.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { StorageService } from 'src/storage/storage.service';
 import { NftService } from './nft.service';
+import { UploadDto } from './dto/upload.dto';
 
 @UseGuards(AuthGuard)
 @Controller('nft')
@@ -28,6 +29,11 @@ export class NftController {
   @Get('/user')
   async getByUserId(@CurrentUser() user: User) {
     return await this.nftService.getByUserId(user.id);
+  }
+
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    return await this.nftService.getById(id);
   }
 
   @Get()
@@ -45,13 +51,14 @@ export class NftController {
     }),
   )
   async upload(
-    @Body() uploadDto: { title: string },
+    @Body() uploadDto: UploadDto,
     @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: User,
   ) {
     return await this.nftService.upload({
       file,
       title: uploadDto.title,
+      description: uploadDto.description,
       path: 'nfts',
       user,
     });
