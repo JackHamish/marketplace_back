@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { hash } from 'argon2';
+import { Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { PrismaService } from "src/prisma/prisma.service";
+import { hash } from "argon2";
 import {
   BadRequestException,
   NotFoundException,
-} from '@nestjs/common/exceptions';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Prisma, ResetPasswordToken } from '@prisma/client';
-import { MailService } from 'src/mail /mail.service';
-import { ResetTokenService } from 'src/reset-token/reset-token.service';
-import { ResetPasswordWithTokenRequestDto } from 'src/reset-token/dto/reset-password-with-token.request.dto';
-import { JwtService } from '@nestjs/jwt';
-import { NotificationsService } from 'src/notifications/notifications.service';
-import { CreateNotificationDto } from 'src/notifications/dto/create-notification.dto';
+} from "@nestjs/common/exceptions";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { Prisma, ResetPasswordToken } from "@prisma/client";
+import { MailService } from "src/mail /mail.service";
+import { ResetTokenService } from "src/reset-token/reset-token.service";
+import { ResetPasswordWithTokenRequestDto } from "src/reset-token/dto/reset-password-with-token.request.dto";
+import { JwtService } from "@nestjs/jwt";
+import { NotificationsService } from "src/notifications/notifications.service";
+import { CreateNotificationDto } from "src/notifications/dto/create-notification.dto";
 
 @Injectable()
 export class UserService {
@@ -33,7 +33,7 @@ export class UserService {
       where: { id },
     });
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException("User not found");
 
     return await this.notificationsService.acceptPushNotification(
       user,
@@ -54,8 +54,8 @@ export class UserService {
 
     await this.notificationsService.sendPush(
       user,
-      'Password change',
-      'There is a new application for changing the password',
+      "Password change",
+      "There is a new application for changing the password",
     );
 
     return response;
@@ -95,7 +95,7 @@ export class UserService {
     });
 
     if (oldUser) {
-      throw new BadRequestException('User already exist');
+      throw new BadRequestException("User already exist");
     }
 
     const user = await this.prisma.user.create({

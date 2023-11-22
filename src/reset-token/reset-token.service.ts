@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ResetPasswordToken } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { ResetPasswordToken } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class ResetTokenService {
@@ -26,7 +26,7 @@ export class ResetTokenService {
     });
 
     if (duplicate) {
-      throw new BadRequestException('Reset token already send to email');
+      throw new BadRequestException("Reset token already send to email");
     }
 
     return await this.prisma.resetPasswordToken.create({

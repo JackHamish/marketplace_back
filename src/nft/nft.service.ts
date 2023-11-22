@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { CreateNftDto } from './dto/create-nft.dto';
-import { StorageService } from 'src/storage/storage.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { CreateNftDto } from "./dto/create-nft.dto";
+import { StorageService } from "src/storage/storage.service";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class NftService {

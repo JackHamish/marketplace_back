@@ -1,5 +1,5 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getMailConfig } from './smtp-config';
+import { ConfigModule } from "@nestjs/config";
+import { getMailConfig } from "./smtp-config";
 
 export const mailerConfig = {
   imports: [ConfigModule],

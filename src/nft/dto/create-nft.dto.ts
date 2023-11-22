@@ -1,5 +1,4 @@
-import { User } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { User } from "@prisma/client";
 
 export class CreateNftDto {
   file: Express.Multer.File;
