@@ -8,26 +8,31 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { User } from '@prisma/client';
-import { log } from 'console';
-import { CurrentUser } from 'src/auth/decorators/current.user.decorator';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { StorageService } from 'src/storage/storage.service';
-import { NftService } from './nft.service';
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { User } from "@prisma/client";
+import { CurrentUser } from "src/auth/decorators/current.user.decorator";
+import { AuthGuard } from "src/auth/guards/auth.guard";
+import { StorageService } from "src/storage/storage.service";
+import { NftService } from "./nft.service";
+import { UploadDto } from "./dto/upload.dto";
 
 @UseGuards(AuthGuard)
-@Controller('nft')
+@Controller("nfts")
 export class NftController {
   constructor(
     private storageService: StorageService,
     private nftService: NftService,
   ) {}
 
-  @Get('/user')
+  @Get("/user")
   async getByUserId(@CurrentUser() user: User) {
     return await this.nftService.getByUserId(user.id);
+  }
+
+  @Get(":id")
+  async getById(@Param("id") id: string) {
+    return await this.nftService.getById(id);
   }
 
   @Get()
@@ -37,7 +42,7 @@ export class NftController {
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('file', {
+    FileInterceptor("file", {
       limits: {
         files: 1,
         fileSize: 1024 * 1024,
@@ -45,20 +50,20 @@ export class NftController {
     }),
   )
   async upload(
-    @Body() uploadDto: { title: string },
+    @Body() uploadDto: UploadDto,
     @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: User,
   ) {
     return await this.nftService.upload({
       file,
       title: uploadDto.title,
-      path: 'nfts',
+      description: uploadDto.description,
       user,
     });
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
+  @Delete(":id")
+  async delete(@Param("id") id: string) {
     return await this.nftService.delete(id);
   }
 }

@@ -53,9 +53,10 @@ model Nft {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  title String
-  url   String
-  dbRef String
+  title       String
+  description String
+  url         String
+  dbRef       String
 
   userId String @db.Uuid
   user   User   @relation(fields: [userId], references: [id])

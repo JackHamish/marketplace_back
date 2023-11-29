@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { ResetTokenService } from './reset-token.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Module } from "@nestjs/common";
+import { ResetTokenService } from "./reset-token.service";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Module({
   imports: [],

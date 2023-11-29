@@ -5,8 +5,8 @@ import {
   uploadBytes,
   deleteObject,
   getDownloadURL,
-} from 'firebase/storage';
-import { Injectable } from '@nestjs/common';
+} from "firebase/storage";
+import { Injectable } from "@nestjs/common";
 @Injectable()
 export class StorageService {
   private storage: FirebaseStorage;
@@ -17,8 +17,8 @@ export class StorageService {
 
   async save(file: Express.Multer.File, path: string) {
     const timestamp = Date.now();
-    const name = file.originalname.split('.')[0];
-    const type = file.originalname.split('.')[1];
+    const name = file.originalname.split(".")[0];
+    const type = file.originalname.split(".")[1];
     const fileName = `${name}_${timestamp}.${type}`;
 
     const fileRef = ref(this.storage, `${path}/${fileName}`);

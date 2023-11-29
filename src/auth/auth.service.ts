@@ -1,20 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from './dto/register.dto';
-import { UserService } from 'src/user/user.service';
-import { RefreshDto } from './dto/refresh.dto';
-import { addSeconds, getTime } from 'date-fns';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { RegisterDto } from "./dto/register.dto";
+import { UserService } from "src/user/user.service";
+import { RefreshDto } from "./dto/refresh.dto";
+import { addSeconds, getTime } from "date-fns";
 import {
-  BadRequestException,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common/exceptions';
-import { verify } from 'argon2';
-import { LoginDto } from './dto/login.dto';
-import { JWT_EXPIRES_IN_SECONDS } from './auth.constants';
-import { CreateSteamUserDto } from 'src/steam-user/dto/create-steam-user.dto';
-import { ResetTokenService } from 'src/reset-token/reset-token.service';
-import { MailService } from 'src/mail /mail.service';
+} from "@nestjs/common/exceptions";
+import { verify } from "argon2";
+import { LoginDto } from "./dto/login.dto";
+import { JWT_EXPIRES_IN_SECONDS } from "./auth.constants";
+import { CreateSteamUserDto } from "src/steam-user/dto/create-steam-user.dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -39,7 +36,7 @@ export class AuthService {
     });
 
     if (!result) {
-      throw new UnauthorizedException('Invalid refresh token');
+      throw new UnauthorizedException("Invalid refresh token");
     }
 
     const tokens = await this.issueTokens(result.id);
@@ -91,7 +88,7 @@ export class AuthService {
 
     const refreshToken = await this.jwtService.signAsync(data, {
       secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d',
+      expiresIn: "7d",
     });
 
     return { accessToken, refreshToken };
@@ -101,13 +98,13 @@ export class AuthService {
     const user = await this.userService.findUnique({ email: loginDto.email });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
     const isValid = await verify(user.password, loginDto.password);
 
     if (!isValid) {
-      throw new UnauthorizedException('Invalid password');
+      throw new UnauthorizedException("Invalid password");
     }
 
     return user;

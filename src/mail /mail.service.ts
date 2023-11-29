@@ -1,5 +1,5 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { MailerService } from "@nestjs-modules/mailer";
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class MailService {
@@ -10,8 +10,8 @@ export class MailService {
 
     await this.mailerService.sendMail({
       to: email,
-      subject: 'Reset password',
-      template: './resetPassword',
+      subject: "Reset password",
+      template: "./resetPassword",
       context: {
         url,
       },
