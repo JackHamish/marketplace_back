@@ -7,7 +7,5 @@ export class CreateNftDto {
 
   description: string;
 
-  path: string;
-
   user: User;
 }

@@ -1,3 +1,4 @@
+import { NFT_INCLUDE } from "./constants";
 import { Injectable } from "@nestjs/common";
 import { CreateNftDto } from "./dto/create-nft.dto";
 import { StorageService } from "src/storage/storage.service";
@@ -18,31 +19,20 @@ export class NftService {
   }
 
   async getAll() {
-    return await this.prismaService.nft.findMany({
-      select: {
-        id: true,
-        title: true,
-        url: true,
-        user: { select: { name: true } },
-      },
-      // include: { user: { select: { name: true } } },
-    });
+    return await this.prismaService.nft.findMany(NFT_INCLUDE);
   }
 
   async getByUserId(id: string) {
     return await this.prismaService.nft.findMany({
       where: { userId: id },
-      select: {
-        id: true,
-        title: true,
-        url: true,
-        user: { select: { name: true } },
-      },
+      ...NFT_INCLUDE,
     });
   }
 
   async upload(createNftDto: CreateNftDto) {
-    const { file, path, user, title, description } = createNftDto;
+    const { file, user, title, description } = createNftDto;
+
+    const path = "nfts";
 
     const { url, dbRef } = await this.storageService.save(file, path);
 

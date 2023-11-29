@@ -18,7 +18,7 @@ import { NftService } from "./nft.service";
 import { UploadDto } from "./dto/upload.dto";
 
 @UseGuards(AuthGuard)
-@Controller("nft")
+@Controller("nfts")
 export class NftController {
   constructor(
     private storageService: StorageService,
@@ -58,7 +58,6 @@ export class NftController {
       file,
       title: uploadDto.title,
       description: uploadDto.description,
-      path: "nfts",
       user,
     });
   }
